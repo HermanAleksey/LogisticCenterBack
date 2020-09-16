@@ -2,8 +2,6 @@ package com.example.restservice.DAO
 
 import com.example.restservice.MyConnection
 import com.example.restservice.entity.LogisticsCenter
-import com.example.restservice.entity.Product
-import sun.security.util.Debug
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
@@ -23,18 +21,11 @@ class DAOCenter {
         var statement: Statement? = null
         var resultSet: ResultSet? = null
 
-        try {
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery("select * from logistic_center where id = $id;")
-            resultSet.next()
+        statement = MyConnection.connection.createStatement()
+        resultSet = statement.executeQuery("select * from logistic_center where id = $id;")
+        resultSet.next()
 
-            logisticsCenter = extractCenter(resultSet)
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
-        }
+        logisticsCenter = extractCenter(resultSet)
 
         return logisticsCenter
     }
@@ -44,23 +35,15 @@ class DAOCenter {
         var statement: Statement? = null
         var resultSet: ResultSet? = null
 
-        try {
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery("select * from logistic_center;")
+        statement = MyConnection.connection.createStatement()
+        resultSet = statement.executeQuery("select * from logistic_center;")
 
-            resultArray = emptyArray()
+        resultArray = emptyArray()
 
-            var i = 0
-            while (resultSet.next()) {
-                resultArray[i] = extractCenter(resultSet)
-                i++
-            }
-
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
+        var i = 0
+        while (resultSet.next()) {
+            resultArray[i] = extractCenter(resultSet)
+            i++
         }
 
         return resultArray
@@ -76,61 +59,37 @@ class DAOCenter {
 
     fun insertProduct(center: LogisticsCenter) {
         var statement: Statement? = null
-        var resultSet: ResultSet? = null
 
-        try {
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery(
-                    "insert into logistic_center(\n" +
-                            "Name, Location" +
-                            ") values (\n" +
-                            "${center.name}, ${center.location}" +
-                            ");")
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
-        }
+        statement = MyConnection.connection.createStatement()
+        statement.execute(
+                "insert into logistic_center(\n" +
+                        "Name, Location" +
+                        ") values (\n" +
+                        "\"${center.name}\", \"${center.location}\"" +
+                        ");")
     }
 
     fun updateCenter(id: Int, center: LogisticsCenter) {
         var statement: Statement? = null
         var resultSet: ResultSet? = null
 
-        try {
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery(
-                    "update logistic_center set\n" +
-                            "Name = ${center.name}," +
-                            "Location = ${center.location}" +
-                            "where id = $id;")
-
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
-        }
+        statement = MyConnection.connection.createStatement()
+        statement.execute(
+                "update logistic_center set\n" +
+                        "Name = \"${center.name}\"," +
+                        "Location = \"${center.location}\"" +
+                        "where id = $id;")
     }
 
     fun removeCenter(id: Int) {
         var statement: Statement? = null
-        var resultSet: ResultSet? = null
 
-        try {
-            //Удаление также из таблицы Center-Product
-            DAOCenterProduct().removeCenterProductsByCenterId(id)
+        //Удаление также из таблицы Center-Product
+        DAOCenterProduct().removeCenterProductsByCenterId(id)
 
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery(
-                    "delete from logistic_center where id = $id;")
+        statement = MyConnection.connection.createStatement()
+        statement.execute(
+                "delete from logistic_center where id = $id;")
 
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
-        }
     }
 }

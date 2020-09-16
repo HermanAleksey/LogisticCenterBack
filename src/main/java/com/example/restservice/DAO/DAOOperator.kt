@@ -1,10 +1,7 @@
 package com.example.restservice.DAO
 
 import com.example.restservice.MyConnection
-import com.example.restservice.entity.Account
 import com.example.restservice.entity.Operator
-import com.example.restservice.entity.Roles
-import sun.security.util.Debug
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
@@ -17,7 +14,7 @@ class DAOOperator {
     select all
     insert
     update by id + new object
-    remove by id
+    -----  remove by id
      */
 
     fun getOperator(id: Int): Operator? {
@@ -25,18 +22,11 @@ class DAOOperator {
         var statement: Statement? = null
         var resultSet: ResultSet? = null
 
-        try {
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery("select * from operator where id = $id;")
-            resultSet.next()
+        statement = MyConnection.connection.createStatement()
+        resultSet = statement.executeQuery("select * from operator where id = $id;")
+        resultSet.next()
 
-            operator = extractOperator(resultSet)
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
-        }
+        operator = extractOperator(resultSet)
 
         return operator
     }
@@ -46,23 +36,15 @@ class DAOOperator {
         var statement: Statement? = null
         var resultSet: ResultSet? = null
 
-        try {
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery("select * from operator where FIO like \"%$FIO%\";")
+        statement = MyConnection.connection.createStatement()
+        resultSet = statement.executeQuery("select * from operator where FIO like \"%$FIO%\";")
 
-            resultArray = emptyArray()
+        resultArray = emptyArray()
 
-            var i = 0
-            while (resultSet.next()) {
-                resultArray[i] = extractOperator(resultSet)
-                i++
-            }
-
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
+        var i = 0
+        while (resultSet.next()) {
+            resultArray[i] = extractOperator(resultSet)
+            i++
         }
 
         return resultArray
@@ -73,23 +55,15 @@ class DAOOperator {
         var statement: Statement? = null
         var resultSet: ResultSet? = null
 
-        try {
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery("select * from operator;")
+        statement = MyConnection.connection.createStatement()
+        resultSet = statement.executeQuery("select * from operator;")
 
-            resultArray = emptyArray()
+        resultArray = emptyArray()
 
-            var i = 0
-            while (resultSet.next()) {
-                resultArray[i] = extractOperator(resultSet)
-                i++
-            }
-
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
+        var i = 0
+        while (resultSet.next()) {
+            resultArray[i] = extractOperator(resultSet)
+            i++
         }
 
         return resultArray
@@ -106,61 +80,44 @@ class DAOOperator {
         return Operator(id, FIO, phoneNumber, account!!)
     }
 
-    fun insertOperator (operator: Operator) {
+    fun insertOperator(operator: Operator) {
         var statement: Statement? = null
-        var resultSet: ResultSet? = null
 
-        try {
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery(
-                    "insert into Operator(\n" +
-                            "ID, FIO, Phone_number, Account_id\n" +
-                            ") values (\n" +
-                            "${operator.id}, ${operator.FIO}," +
-                            "${operator.phoneNumber}, ${operator.account.id}\n" +
-                            ");")
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
-        }
+        statement = MyConnection.connection.createStatement()
+        statement.execute(
+                "insert into Operator(\n" +
+                        "ID, FIO, Phone_number, Account_id\n" +
+                        ") values (\n" +
+                        "${operator.id}, \"${operator.FIO}\"," +
+                        "\"${operator.phoneNumber}\", ${operator.account.id}\n" +
+                        ");")
     }
 
-    fun updateOperator (id: Int, operator: Operator) {
+    fun updateOperator(id: Int, operator: Operator) {
         var statement: Statement? = null
-        var resultSet: ResultSet? = null
 
-        try {
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery(
-                    "update operator set\n" +
-                            "FIO = ${operator.FIO}, Phone_number = ${operator.phoneNumber}\n" +
-                            "where id = $id;")
-
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
-        }
+        statement = MyConnection.connection.createStatement()
+        statement.execute(
+                "update operator set\n" +
+                        "FIO = \"${operator.FIO}\", Phone_number = \"${operator.phoneNumber}\"" +
+                        "where id = $id;")
     }
 
-    fun removeOperator (id: Int) {
-        var statement: Statement? = null
-        var resultSet: ResultSet? = null
-
-        try {
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery(
-                    "delete from operator where id = $id;")
-            DAOAccount().removeAccount(getOperator(id)!!.account.id) //так же удаляет аккаунт привязаный к юзеру
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
-        }
-    }
+//    fun removeOperator (id: Int) {
+//        var statement: Statement? = null
+//        var resultSet: ResultSet? = null
+//
+//        try {
+//            statement = MyConnection.connection.createStatement()
+//            resultSet = statement.executeQuery(
+//                    "delete from operator where id = $id;")
+//            DAOAccount().removeAccount(getOperator(id)!!.account.id) //так же удаляет аккаунт привязаный к юзеру
+//        } catch (e: SQLException) {
+//            println("Error!, SQLException: ${e.errorCode}")
+//        } finally {
+//            resultSet!!.close()
+//            statement!!.close()
+//        }
+//    }
 
 }

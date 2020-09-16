@@ -3,7 +3,6 @@ package com.example.restservice.DAO
 import com.example.restservice.MyConnection.connection
 import com.example.restservice.entity.Account
 import com.example.restservice.entity.Roles
-import sun.security.util.Debug
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
@@ -15,7 +14,7 @@ class DAOAccount {
     select all
     insert
     update by id + new object
-    remove by id
+    ----- remove by id
      */
 
     fun getAccount(id: Int): Account? {
@@ -23,18 +22,11 @@ class DAOAccount {
         var statement: Statement? = null
         var resultSet: ResultSet? = null
 
-        try {
-            statement = connection.createStatement()
-            resultSet = statement.executeQuery("select * from account where id = $id;")
-            resultSet.next()
+        statement = connection.createStatement()
+        resultSet = statement.executeQuery("select * from account where id = $id;")
+        resultSet.next()
 
-            account = extractAccount(resultSet)
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
-        }
+        account = extractAccount(resultSet)
 
         return account
     }
@@ -44,23 +36,15 @@ class DAOAccount {
         var statement: Statement? = null
         var resultSet: ResultSet? = null
 
-        try {
-            statement = connection.createStatement()
-            resultSet = statement.executeQuery("select * from account;")
+        statement = connection.createStatement()
+        resultSet = statement.executeQuery("select * from account;")
 
-            resultArray = emptyArray()
+        resultArray = emptyArray()
 
-            var i = 0
-            while (resultSet.next()) {
-                resultArray[i] = extractAccount(resultSet)
-                i++
-            }
-
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
+        var i = 0
+        while (resultSet.next()) {
+            resultArray[i] = extractAccount(resultSet)
+            i++
         }
 
         return resultArray
@@ -83,59 +67,36 @@ class DAOAccount {
 
     fun insertAccount(account: Account) {
         var statement: Statement? = null
-        var resultSet: ResultSet? = null
 
-        try {
-            statement = connection.createStatement()
-            resultSet = statement.executeQuery(
-                    "insert into Account(\n" +
-                            "login, pass, role_id\n" +
-                            ") values (\n" +
-                            "${account.login}, ${account.password}, ${Roles.Driver.getPosition(account.role)}\n" +
-                            ");")
+        statement = connection.createStatement()
+        statement.execute(
+                "insert into Account(\n" +
+                        "login, pass, role_id\n" +
+                        ") values (\n" +
+                        "${account.login}, ${account.password}, ${Roles.Driver.getPosition(account.role)}\n" +
+                        ");")
 
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
-        }
     }
 
     fun updateAccount(id: Int, account: Account) {
         var statement: Statement? = null
-        var resultSet: ResultSet? = null
 
-        try {
-            statement = connection.createStatement()
-            resultSet = statement.executeQuery(
-                    "update account set\n" +
-                            "login = ${account.login}, pass = ${account.password}\n" +
-                            "where id = $id;")
+        statement = connection.createStatement()
+        statement.execute(
+                "update account set\n" +
+                        "login = ${account.login}, pass = ${account.password}\n" +
+                        "where id = $id;")
 
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
-        }
     }
 
-    //только если не привязано к пользователю
-    fun removeAccount(id: Int) {
-        var statement: Statement? = null
-        var resultSet: ResultSet? = null
-
-        try {
-            statement = connection.createStatement()
-            resultSet = statement.executeQuery(
-                    "delete from account where id = $id;")
-
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
-        }
-    }
+//    //только если не привязано к пользователю
+//    fun removeAccount(id: Int) {
+//        var statement: Statement? = null
+//        var resultSet: ResultSet? = null
+//
+//        statement = connection.createStatement()
+//        statement.execute(
+//                "delete from account where id = $id;")
+//
+//    }
 }

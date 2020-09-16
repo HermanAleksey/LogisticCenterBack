@@ -1,11 +1,7 @@
 package com.example.restservice.DAO
 
 import com.example.restservice.MyConnection
-import com.example.restservice.entity.Account
 import com.example.restservice.entity.Driver
-import com.example.restservice.entity.Operator
-import com.example.restservice.entity.Roles
-import sun.security.util.Debug
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
@@ -19,23 +15,16 @@ class DAODriver {
     remove by id
      */
 
-    fun getDriver(id: Int): Driver?{
+    fun getDriver(id: Int): Driver? {
         var driver: Driver? = null
         var statement: Statement? = null
         var resultSet: ResultSet? = null
 
-        try {
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery("select * from driver where id = $id;")
-            resultSet.next()
+        statement = MyConnection.connection.createStatement()
+        resultSet = statement.executeQuery("select * from driver where id = $id;")
+        resultSet.next()
 
-            driver = extractDriver(resultSet)
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
-        }
+        driver = extractDriver(resultSet)
 
         return driver
     }
@@ -45,23 +34,15 @@ class DAODriver {
         var statement: Statement? = null
         var resultSet: ResultSet? = null
 
-        try {
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery("select * from driver;")
+        statement = MyConnection.connection.createStatement()
+        resultSet = statement.executeQuery("select * from driver;")
 
-            resultArray = emptyArray()
+        resultArray = emptyArray()
 
-            var i = 0
-            while (resultSet.next()) {
-                resultArray[i] = extractDriver(resultSet)
-                i++
-            }
-
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
+        var i = 0
+        while (resultSet.next()) {
+            resultArray[i] = extractDriver(resultSet)
+            i++
         }
 
         return resultArray
@@ -75,58 +56,34 @@ class DAODriver {
         return Driver(id, FIO, phoneNumber)
     }
 
-    fun insertDriver (driver: Driver) {
+    fun insertDriver(driver: Driver) {
         var statement: Statement? = null
-        var resultSet: ResultSet? = null
 
-        try {
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery(
-                    "insert into Driver(\n" +
-                            "ID, FIO, Phone_number\n" +
-                            ") values (\n" +
-                            "${driver.id}, ${driver.FIO}, ${driver.phoneNumber}" +
-                            ");")
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
-        }
+        statement = MyConnection.connection.createStatement()
+        statement.execute(
+                "insert into Driver(\n" +
+                        "ID, FIO, Phone_number\n" +
+                        ") values (\n" +
+                        "${driver.id}, \"${driver.FIO}\", \"${driver.phoneNumber}\"" +
+                        ");")
     }
 
-    fun updateDriver (id: Int, driver: Driver) {
+    fun updateDriver(id: Int, driver: Driver) {
         var statement: Statement? = null
-        var resultSet: ResultSet? = null
 
-        try {
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery(
-                    "update driver set\n" +
-                            "FIO = ${driver.FIO}, Phone_number = ${driver.phoneNumber}\n" +
-                            "where id = $id;")
+        statement = MyConnection.connection.createStatement()
+        statement.execute(
+                "update driver set\n" +
+                        "FIO = \"${driver.FIO}\", Phone_number = \"${driver.phoneNumber}\"" +
+                        "where id = $id;")
 
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
-        }
     }
 
-    fun removeDriver (id: Int) {
+    fun removeDriver(id: Int) {
         var statement: Statement? = null
-        var resultSet: ResultSet? = null
 
-        try {
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery(
-                    "delete from Driver where id = $id;")
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
-        }
+        statement = MyConnection.connection.createStatement()
+        statement.execute(
+                "delete from Driver where id = $id;")
     }
 }

@@ -2,8 +2,6 @@ package com.example.restservice.DAO
 
 import com.example.restservice.MyConnection
 import com.example.restservice.entity.CenterProduct
-import com.example.restservice.entity.Product
-import sun.security.util.Debug
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
@@ -27,18 +25,11 @@ class DAOCenterProduct {
         var statement: Statement? = null
         var resultSet: ResultSet? = null
 
-        try {
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery("select * from center_product where center_id = $id;")
-            resultSet.next()
+        statement = MyConnection.connection.createStatement()
+        resultSet = statement.executeQuery("select * from center_product where center_id = $id;")
+        resultSet.next()
 
-            centerProduct = extractCenterProduct(resultSet)
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
-        }
+        centerProduct = extractCenterProduct(resultSet)
 
         return centerProduct
     }
@@ -48,18 +39,11 @@ class DAOCenterProduct {
         var statement: Statement? = null
         var resultSet: ResultSet? = null
 
-        try {
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery("select * from center_product where product_id = $id;")
-            resultSet.next()
+        statement = MyConnection.connection.createStatement()
+        resultSet = statement.executeQuery("select * from center_product where product_id = $id;")
+        resultSet.next()
 
-            centerProduct = extractCenterProduct(resultSet)
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
-        }
+        centerProduct = extractCenterProduct(resultSet)
 
         return centerProduct
     }
@@ -69,18 +53,11 @@ class DAOCenterProduct {
         var statement: Statement? = null
         var resultSet: ResultSet? = null
 
-        try {
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery("select * from center_product where id = $id;")
-            resultSet.next()
+        statement = MyConnection.connection.createStatement()
+        resultSet = statement.executeQuery("select * from center_product where id = $id;")
+        resultSet.next()
 
-            centerProduct = extractCenterProduct(resultSet)
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
-        }
+        centerProduct = extractCenterProduct(resultSet)
 
         return centerProduct
     }
@@ -90,23 +67,15 @@ class DAOCenterProduct {
         var statement: Statement? = null
         var resultSet: ResultSet? = null
 
-        try {
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery("select * from center_product;")
+        statement = MyConnection.connection.createStatement()
+        resultSet = statement.executeQuery("select * from center_product;")
 
-            resultArray = emptyArray()
+        resultArray = emptyArray()
 
-            var i = 0
-            while (resultSet.next()) {
-                resultArray[i] = extractCenterProduct(resultSet)
-                i++
-            }
-
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
+        var i = 0
+        while (resultSet.next()) {
+            resultArray[i] = extractCenterProduct(resultSet)
+            i++
         }
 
         return resultArray
@@ -125,91 +94,50 @@ class DAOCenterProduct {
 
     fun insertCenterProduct(centerProduct: CenterProduct) {
         var statement: Statement? = null
-        var resultSet: ResultSet? = null
 
-        try {
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery(
-                    "insert into center_product(\n" +
-                            "ID, Center_id, Product_id\n" +
-                            ") values (\n" +
-                            "${centerProduct.id}, ${centerProduct.center.id}," +
-                            " ${centerProduct.product.id}" +
-                            ");")
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
-        }
+        statement = MyConnection.connection.createStatement()
+        statement.execute(
+                "insert into center_product(\n" +
+                        "ID, Center_id, Product_id\n" +
+                        ") values (\n" +
+                        "${centerProduct.id}, ${centerProduct.center.id}," +
+                        " ${centerProduct.product.id}" +
+                        ");")
     }
 
     fun updateCenterProduct(id: Int, centerProduct: CenterProduct) {
         var statement: Statement? = null
-        var resultSet: ResultSet? = null
 
-        try {
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery(
-                    "update center_product set\n" +
-                            "Center_id = ${centerProduct.center.id}," +
-                            "Product_id = ${centerProduct.product.id}" +
-                            "where id = $id;")
-
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
-        }
+        statement = MyConnection.connection.createStatement()
+        statement.executeQuery(
+                "update center_product set\n" +
+                        "Center_id = ${centerProduct.center.id}," +
+                        "Product_id = ${centerProduct.product.id}" +
+                        "where id = $id;")
     }
 
     fun removeCenterProductById(id: Int) {
         var statement: Statement? = null
-        var resultSet: ResultSet? = null
 
-        try {
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery(
-                    "delete from center_product where id = $id;")
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
-        }
+        statement = MyConnection.connection.createStatement()
+        statement.execute(
+                "delete from center_product where id = $id;")
     }
 
     fun removeCenterProductsByCenterId(id: Int) {
         var statement: Statement? = null
-        var resultSet: ResultSet? = null
 
-        try {
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery(
-                    "delete from center_product where center_id = $id;")
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
-        }
+        statement = MyConnection.connection.createStatement()
+        statement.executeQuery(
+                "delete from center_product where center_id = $id;")
     }
 
     fun removeCenterProductsByProductId(id: Int) {
         var statement: Statement? = null
-        var resultSet: ResultSet? = null
 
-        try {
-            statement = MyConnection.connection.createStatement()
-            resultSet = statement.executeQuery(
-                    "delete from center_product where product_id = $id;")
-        } catch (e: SQLException) {
-            Debug.println("Error!", "SQLException: ${e.errorCode}")
-        } finally {
-            resultSet!!.close()
-            statement!!.close()
-        }
+        statement = MyConnection.connection.createStatement()
+        statement.executeQuery(
+                "delete from center_product where product_id = $id;")
     }
 
 }
