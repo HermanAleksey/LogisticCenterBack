@@ -3,6 +3,8 @@ package com.example.restservice.DAO
 import com.example.restservice.MyConnection.connection
 import com.example.restservice.entity.Account
 import com.example.restservice.entity.Roles
+import com.sun.org.apache.xpath.internal.operations.Bool
+import java.lang.Exception
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
@@ -65,28 +67,37 @@ class DAOAccount {
         return Account(id, login, password, role)
     }
 
-    fun insertAccount(account: Account) {
+    fun insertAccount(account: Account): Boolean {
         var statement: Statement? = null
 
-        statement = connection.createStatement()
-        statement.execute(
-                "insert into Account(\n" +
-                        "login, pass, role_id\n" +
-                        ") values (\n" +
-                        "${account.login}, ${account.password}, ${Roles.Driver.getPosition(account.role)}\n" +
-                        ");")
+        return try {
+            statement = connection.createStatement()
+            statement.execute(
+                    "insert into Account(\n" +
+                            "login, pass, role_id\n" +
+                            ") values (\n" +
+                            "${account.login}, ${account.password}, ${Roles.Driver.getPosition(account.role)}\n" +
+                            ");")
+            true
+        } catch (e: Exception){
+            false
+        }
 
     }
 
-    fun updateAccount(id: Int, account: Account) {
+    fun updateAccount(id: Int, account: Account) : Boolean {
         var statement: Statement? = null
 
-        statement = connection.createStatement()
-        statement.execute(
-                "update account set\n" +
-                        "login = ${account.login}, pass = ${account.password}\n" +
-                        "where id = $id;")
-
+        return try {
+            statement = connection.createStatement()
+            statement.execute(
+                    "update account set\n" +
+                            "login = ${account.login}, pass = ${account.password}\n" +
+                            "where id = $id;")
+            true
+        } catch (e: Exception){
+            false
+        }
     }
 
 //    //только если не привязано к пользователю

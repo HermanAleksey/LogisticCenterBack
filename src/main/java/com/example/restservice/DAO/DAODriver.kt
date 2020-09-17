@@ -2,6 +2,7 @@ package com.example.restservice.DAO
 
 import com.example.restservice.MyConnection
 import com.example.restservice.entity.Driver
+import java.lang.Exception
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
@@ -68,22 +69,32 @@ class DAODriver {
                         ");")
     }
 
-    fun updateDriver(id: Int, driver: Driver) {
+    fun updateDriver(id: Int, driver: Driver): Boolean {
         var statement: Statement? = null
 
-        statement = MyConnection.connection.createStatement()
-        statement.execute(
-                "update driver set\n" +
-                        "FIO = \"${driver.FIO}\", Phone_number = \"${driver.phoneNumber}\"" +
-                        "where id = $id;")
+        return try {
+            statement = MyConnection.connection.createStatement()
+            statement.execute(
+                    "update driver set\n" +
+                            "FIO = \"${driver.FIO}\", Phone_number = \"${driver.phoneNumber}\"" +
+                            "where id = $id;")
+            true
+        } catch (e: Exception) {
+            false
+        }
 
     }
 
-    fun removeDriver(id: Int) {
+    fun removeDriver(id: Int): Boolean {
         var statement: Statement? = null
 
-        statement = MyConnection.connection.createStatement()
-        statement.execute(
-                "delete from Driver where id = $id;")
+        return try {
+            statement = MyConnection.connection.createStatement()
+            statement.execute(
+                    "delete from Driver where id = $id;")
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 }

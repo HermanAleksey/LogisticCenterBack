@@ -2,6 +2,7 @@ package com.example.restservice.DAO
 
 import com.example.restservice.MyConnection
 import com.example.restservice.entity.Waybill
+import java.lang.Exception
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
@@ -76,9 +77,10 @@ class DAOWaybill {
         return Waybill(id, dateOfDelivery, dateOfShipment, driver, operator)
     }
 
-    fun insertWaybill(waybill: Waybill) {
+    fun insertWaybill(waybill: Waybill): Boolean {
         var statement: Statement? = null
 
+        return try {
         statement = MyConnection.connection.createStatement()
         statement.execute(
                 "insert into Waybill(\n" +
@@ -87,11 +89,16 @@ class DAOWaybill {
                         "${waybill.id}, \"${waybill.dateOfDelivery}\", \"${waybill.dateOfShipment}\"," +
                         "${waybill.driver.id}, ${waybill.operator.id}" +
                         ");")
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
-    fun updateWaybill(id: Int, waybill: Waybill) {
+    fun updateWaybill(id: Int, waybill: Waybill): Boolean {
         var statement: Statement? = null
 
+        return try {
         statement = MyConnection.connection.createStatement()
         statement.execute(
                 "update waybill set\n" +
@@ -100,14 +107,22 @@ class DAOWaybill {
                         "Driver_id = ${waybill.driver.id}," +
                         "Operator_id = ${waybill.operator.id}" +
                         "where id = $id;")
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
-    fun removeWaybill(id: Int) {
+    fun removeWaybill(id: Int): Boolean {
         var statement: Statement? = null
-        var resultSet: ResultSet? = null
 
+        return try {
         statement = MyConnection.connection.createStatement()
-        resultSet = statement.executeQuery(
+        statement.executeQuery(
                 "delete from waybill where id = $id;")
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 }

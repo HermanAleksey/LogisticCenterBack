@@ -2,6 +2,7 @@ package com.example.restservice.DAO
 
 import com.example.restservice.MyConnection
 import com.example.restservice.entity.Operator
+import java.lang.Exception
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
@@ -80,27 +81,37 @@ class DAOOperator {
         return Operator(id, FIO, phoneNumber, account!!)
     }
 
-    fun insertOperator(operator: Operator) {
+    fun insertOperator(operator: Operator): Boolean {
         var statement: Statement? = null
 
-        statement = MyConnection.connection.createStatement()
-        statement.execute(
-                "insert into Operator(\n" +
-                        "ID, FIO, Phone_number, Account_id\n" +
-                        ") values (\n" +
-                        "${operator.id}, \"${operator.FIO}\"," +
-                        "\"${operator.phoneNumber}\", ${operator.account.id}\n" +
-                        ");")
+        return try {
+            statement = MyConnection.connection.createStatement()
+            statement.execute(
+                    "insert into Operator(\n" +
+                            "ID, FIO, Phone_number, Account_id\n" +
+                            ") values (\n" +
+                            "${operator.id}, \"${operator.FIO}\"," +
+                            "\"${operator.phoneNumber}\", ${operator.account.id}\n" +
+                            ");")
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
-    fun updateOperator(id: Int, operator: Operator) {
+    fun updateOperator(id: Int, operator: Operator): Boolean {
         var statement: Statement? = null
 
-        statement = MyConnection.connection.createStatement()
-        statement.execute(
-                "update operator set\n" +
-                        "FIO = \"${operator.FIO}\", Phone_number = \"${operator.phoneNumber}\"" +
-                        "where id = $id;")
+        return try {
+            statement = MyConnection.connection.createStatement()
+            statement.execute(
+                    "update operator set\n" +
+                            "FIO = \"${operator.FIO}\", Phone_number = \"${operator.phoneNumber}\"" +
+                            "where id = $id;")
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
 //    fun removeOperator (id: Int) {

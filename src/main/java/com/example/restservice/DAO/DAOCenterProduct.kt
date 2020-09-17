@@ -2,6 +2,8 @@ package com.example.restservice.DAO
 
 import com.example.restservice.MyConnection
 import com.example.restservice.entity.CenterProduct
+import com.example.restservice.entity.CenterProductId
+import java.lang.Exception
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
@@ -20,46 +22,23 @@ class DAOCenterProduct {
     remove by product id
      */
 
-    fun getCenterProductByCenterId(id: Int): CenterProduct? {
-        var centerProduct: CenterProduct? = null
+    fun getCenterProductById(id: Int, centerProductId: CenterProductId): Array<CenterProduct>? {
+        var resultArray = emptyArray<CenterProduct>()
         var statement: Statement? = null
         var resultSet: ResultSet? = null
 
         statement = MyConnection.connection.createStatement()
-        resultSet = statement.executeQuery("select * from center_product where center_id = $id;")
-        resultSet.next()
+        resultSet = statement.executeQuery("select * from center_product where $centerProductId = $id;")
 
-        centerProduct = extractCenterProduct(resultSet)
+        resultArray = emptyArray()
 
-        return centerProduct
-    }
+        var i = 0
+        while (resultSet.next()) {
+            resultArray[i] = extractCenterProduct(resultSet)
+            i++
+        }
 
-    fun getCenterProductByProductId(id: Int): CenterProduct? {
-        var centerProduct: CenterProduct? = null
-        var statement: Statement? = null
-        var resultSet: ResultSet? = null
-
-        statement = MyConnection.connection.createStatement()
-        resultSet = statement.executeQuery("select * from center_product where product_id = $id;")
-        resultSet.next()
-
-        centerProduct = extractCenterProduct(resultSet)
-
-        return centerProduct
-    }
-
-    fun getCenterProductById(id: Int): CenterProduct? {
-        var centerProduct: CenterProduct? = null
-        var statement: Statement? = null
-        var resultSet: ResultSet? = null
-
-        statement = MyConnection.connection.createStatement()
-        resultSet = statement.executeQuery("select * from center_product where id = $id;")
-        resultSet.next()
-
-        centerProduct = extractCenterProduct(resultSet)
-
-        return centerProduct
+        return resultArray
     }
 
     fun getCenterProducts(): Array<CenterProduct>? {
@@ -92,52 +71,50 @@ class DAOCenterProduct {
         return CenterProduct(id, center, product)
     }
 
-    fun insertCenterProduct(centerProduct: CenterProduct) {
+    fun insertCenterProduct(centerProduct: CenterProduct): Boolean {
         var statement: Statement? = null
 
-        statement = MyConnection.connection.createStatement()
-        statement.execute(
-                "insert into center_product(\n" +
-                        "ID, Center_id, Product_id\n" +
-                        ") values (\n" +
-                        "${centerProduct.id}, ${centerProduct.center.id}," +
-                        " ${centerProduct.product.id}" +
-                        ");")
+        return try {
+            statement = MyConnection.connection.createStatement()
+            statement.execute(
+                    "insert into center_product(\n" +
+                            "ID, Center_id, Product_id\n" +
+                            ") values (\n" +
+                            "${centerProduct.id}, ${centerProduct.center.id}," +
+                            " ${centerProduct.product.id}" +
+                            ");")
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
-    fun updateCenterProduct(id: Int, centerProduct: CenterProduct) {
+    fun updateCenterProduct(id: Int, centerProduct: CenterProduct): Boolean {
         var statement: Statement? = null
 
-        statement = MyConnection.connection.createStatement()
-        statement.executeQuery(
-                "update center_product set\n" +
-                        "Center_id = ${centerProduct.center.id}," +
-                        "Product_id = ${centerProduct.product.id}" +
-                        "where id = $id;")
+        return try {
+            statement = MyConnection.connection.createStatement()
+            statement.executeQuery(
+                    "update center_product set\n" +
+                            "Center_id = ${centerProduct.center.id}," +
+                            "Product_id = ${centerProduct.product.id}" +
+                            "where id = $id;")
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
-    fun removeCenterProductById(id: Int) {
+    fun removeCenterProductById(id: Int): Boolean {
         var statement: Statement? = null
 
-        statement = MyConnection.connection.createStatement()
-        statement.execute(
-                "delete from center_product where id = $id;")
+        return try {
+            statement = MyConnection.connection.createStatement()
+            statement.execute(
+                    "delete from center_product where ${CenterProductId.CENTER_PRODUCT_ID} = $id;")
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
-
-    fun removeCenterProductsByCenterId(id: Int) {
-        var statement: Statement? = null
-
-        statement = MyConnection.connection.createStatement()
-        statement.executeQuery(
-                "delete from center_product where center_id = $id;")
-    }
-
-    fun removeCenterProductsByProductId(id: Int) {
-        var statement: Statement? = null
-
-        statement = MyConnection.connection.createStatement()
-        statement.executeQuery(
-                "delete from center_product where product_id = $id;")
-    }
-
 }
