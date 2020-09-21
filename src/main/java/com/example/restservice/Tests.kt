@@ -1,10 +1,7 @@
 package com.example.restservice
 
 import com.example.restservice.entity.*
-import com.example.restservice.service.AccountService
-import com.example.restservice.service.CenterService
-import com.example.restservice.service.DriverService
-import com.example.restservice.service.OperatorService
+import com.example.restservice.service.*
 
 class Tests {
 
@@ -21,9 +18,52 @@ class Tests {
 //        testCenterFunctions()
 //        println("\nNEXT\n")
 //        testDriverFunctions()
-        println("\nNEXT\n")
-        testOperatorFunctions()
+//        println("\nNEXT\n")
+//        testOperatorFunctions()
+//        println("\nNEXT\n")
+//        testWaybillFunctions()
+//        println("\nNEXT\n")
+//        testProductsFunctions()
 
+        //не проверил.
+//        println("\nNEXT\n")
+//        testCenterProductFunctions()
+    }
+
+    private fun testProductsFunctions() {
+        ProductService().let {
+            it.getProduct(1)
+            //correct
+
+            it.getProducts()
+            //correct
+
+            it.insertProduct(Product(1,"Inserted","line", 3, Waybill(3)))
+            //correct
+
+            it.updateProduct(1, Product(1,"Updated","Field", 3, Waybill(3)))
+            //correct
+
+            it.removeProduct(10)
+            //correct
+        }
+    }
+
+    private fun testWaybillFunctions() {
+        WaybillService().getWaybill(1)
+        //correct
+
+        WaybillService().getAllWaybills()
+        //correct
+
+        WaybillService().insertWaybill(Waybill(1,"New DATE Deliv","Date shipment", Driver(1),Operator(1)))
+        //correct
+
+        WaybillService().updateWaybill(1, Waybill(1,"update","line", Driver(1),Operator(1)))
+        //correct
+
+        WaybillService().removeWaybill(1)
+        //correct
     }
 
     private fun testOperatorFunctions() {

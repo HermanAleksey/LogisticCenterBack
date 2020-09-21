@@ -112,7 +112,7 @@ class DAODriver {
             statement = MyConnection.connection.createStatement()
             statement.execute(
                     "delete from Driver where id = $id;")
-            Tests().printlnBlue("Error. Object with $id is deleted")
+            Tests().printlnBlue("Object with $id is deleted")
             true
         } catch (e: Exception) {
             Tests().printlnBlue("Error. Object with id = $id is not deleted")

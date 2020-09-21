@@ -7,24 +7,24 @@ import com.example.restservice.entity.CenterProductId
 class CenterProductService {
 
     //second param describe by witch id select objects
-    fun getCenterProductById(id: Int, centerProductId: CenterProductId): Array<CenterProduct>{
-        return DAOCenterProduct().getCenterProductById(id,centerProductId)!!
+    fun getCenterProductById(id: Int, centerProductId: CenterProductId): List<CenterProduct>{
+        return DAOCenterProduct().getCenterProductById(id,centerProductId)
     }
 
-    fun getAllCenterProduct(): Array<CenterProduct>{
-        return DAOCenterProduct().getCenterProducts()!!
+    fun getAllCenterProduct(): List<CenterProduct>{
+        return DAOCenterProduct().getCenterProducts()
     }
 
-    fun createCenterProduct(centerProduct: CenterProduct): Boolean{
+    fun insertCenterProduct(centerProduct: CenterProduct): Boolean{
         return DAOCenterProduct().insertCenterProduct(centerProduct)
     }
 
-    fun redactCenterProduct(id: Int,centerProduct: CenterProduct): Boolean{
+    fun updateCenterProduct(id: Int,centerProduct: CenterProduct): Boolean{
         return DAOCenterProduct().updateCenterProduct(id, centerProduct)
     }
 
     //second param describe by witch id select objects
-    fun deleteCenterProductById(id: Int, centerProductId: CenterProductId): Boolean{
+    fun removeCenterProductById(id: Int, centerProductId: CenterProductId): Boolean{
         return DAOCenterProduct().removeCenterProductById(id, centerProductId)
     }
 

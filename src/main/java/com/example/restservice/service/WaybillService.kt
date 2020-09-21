@@ -8,22 +8,22 @@ import com.example.restservice.entity.Waybill
 class WaybillService {
 
     fun getWaybill(id: Int): Waybill {
-        return DAOWaybill().getWaybill(id)!!
+        return DAOWaybill().getWaybill(id)
     }
 
-    fun getAllWaybills(): Array<Waybill> {
-        return DAOWaybill().getWaybills()!!
+    fun getAllWaybills(): List<Waybill> {
+        return DAOWaybill().getWaybills()
     }
 
-    fun createWaybill(waybill: Waybill): Boolean {
+    fun insertWaybill(waybill: Waybill): Boolean {
         return DAOWaybill().insertWaybill(waybill)
     }
 
-    fun redactWaybill(id: Int, waybill: Waybill): Boolean {
+    fun updateWaybill(id: Int, waybill: Waybill): Boolean {
         return DAOWaybill().updateWaybill(id, waybill)
     }
 
-    fun deleteWaybill(id: Int): Boolean {
+    fun removeWaybill(id: Int): Boolean {
         val productsArray = DAOProduct().getProducts()
         productsArray!!.forEach {
             if (it.waybill.id == id) {

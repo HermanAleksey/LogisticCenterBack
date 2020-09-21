@@ -6,22 +6,22 @@ import com.example.restservice.entity.Product
 class ProductService {
 
     fun getProduct(id: Int): Product {
-        return DAOProduct().getProduct(id)!!
+        return DAOProduct().getProduct(id)
     }
 
-    fun getProducts(): Array<Product>{
-        return DAOProduct().getProducts()!!
+    fun getProducts(): List<Product>{
+        return DAOProduct().getProducts()
     }
 
-    fun redactProduct(id: Int, product: Product): Boolean{
+    fun updateProduct(id: Int, product: Product): Boolean{
         return DAOProduct().updateProduct(id,product)
     }
 
-    fun createProduct(product: Product): Boolean{
+    fun insertProduct(product: Product): Boolean{
         return DAOProduct().insertProduct(product)
     }
 
-    fun deleteProduct(id: Int): Boolean{
+    fun removeProduct(id: Int): Boolean{
         return DAOProduct().removeProduct(id)
     }
 

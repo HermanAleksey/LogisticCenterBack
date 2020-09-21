@@ -1,6 +1,6 @@
 package com.example.restservice.entity
 
 data class Driver(
-        var id: Int,
-        var FIO: String,
-        var phoneNumber: String)
+        var id: Int = 1,
+        var FIO: String = "Default",
+        var phoneNumber: String = "Default")

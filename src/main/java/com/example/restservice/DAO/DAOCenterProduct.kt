@@ -1,6 +1,7 @@
 package com.example.restservice.DAO
 
 import com.example.restservice.MyConnection
+import com.example.restservice.Tests
 import com.example.restservice.entity.CenterProduct
 import com.example.restservice.entity.CenterProductId
 import java.lang.Exception
@@ -22,34 +23,32 @@ class DAOCenterProduct {
     remove by product id
      */
 
-    fun getCenterProductById(id: Int, centerProductId: CenterProductId): Array<CenterProduct>? {
-        var resultArray = emptyArray<CenterProduct>()
-        var statement: Statement? = null
-        var resultSet: ResultSet? = null
+    fun getCenterProductById(id: Int, centerProductId: CenterProductId): List<CenterProduct> {
+        val resultArray = arrayOfNulls<CenterProduct>(1000)
+        val resultSet: ResultSet
 
-        statement = MyConnection.connection.createStatement()
+        val statement: Statement = MyConnection.connection.createStatement()
         resultSet = statement.executeQuery("select * from center_product where $centerProductId = $id;")
 
-        resultArray = emptyArray()
-
         var i = 0
         while (resultSet.next()) {
             resultArray[i] = extractCenterProduct(resultSet)
             i++
         }
 
-        return resultArray
+        val noNullsArray = resultArray.filterNotNull()
+
+        Tests().printlnBlue("Accepted ${noNullsArray.size} objects of class \"CenterProduct\"")
+
+        return noNullsArray
     }
 
-    fun getCenterProducts(): Array<CenterProduct>? {
-        var resultArray = emptyArray<CenterProduct>()
-        var statement: Statement? = null
-        var resultSet: ResultSet? = null
+    fun getCenterProducts(): List<CenterProduct> {
+        val resultArray = arrayOfNulls<CenterProduct>(1000)
+        val resultSet: ResultSet
 
-        statement = MyConnection.connection.createStatement()
+        val statement: Statement = MyConnection.connection.createStatement()
         resultSet = statement.executeQuery("select * from center_product;")
-
-        resultArray = emptyArray()
 
         var i = 0
         while (resultSet.next()) {
@@ -57,7 +56,11 @@ class DAOCenterProduct {
             i++
         }
 
-        return resultArray
+        val noNullsArray = resultArray.filterNotNull()
+
+        Tests().printlnBlue("Accepted ${noNullsArray.size} objects of class \"CenterProduct\"")
+
+        return noNullsArray
     }
 
     private fun extractCenterProduct(resultSet: ResultSet): CenterProduct {
@@ -65,14 +68,14 @@ class DAOCenterProduct {
         val centerId = resultSet.getInt(2)
         val productId = resultSet.getInt(3)
 
-        val center = DAOCenter().getCenter(centerId)!!
-        val product = DAOProduct().getProduct(productId)!!
+        val center = DAOCenter().getCenter(centerId)
+        val product = DAOProduct().getProduct(productId)
 
         return CenterProduct(id, center, product)
     }
 
     fun insertCenterProduct(centerProduct: CenterProduct): Boolean {
-        var statement: Statement? = null
+        val statement: Statement
 
         return try {
             statement = MyConnection.connection.createStatement()
@@ -83,14 +86,16 @@ class DAOCenterProduct {
                             "${centerProduct.id}, ${centerProduct.center.id}," +
                             " ${centerProduct.product.id}" +
                             ");")
+            Tests().printlnBlue("Inserted object $centerProduct")
             true
         } catch (e: Exception) {
+            Tests().printlnBlue("Error. Object $centerProduct is not inserted")
             false
         }
     }
 
     fun updateCenterProduct(id: Int, centerProduct: CenterProduct): Boolean {
-        var statement: Statement? = null
+        val statement: Statement
 
         return try {
             statement = MyConnection.connection.createStatement()
@@ -99,21 +104,25 @@ class DAOCenterProduct {
                             "Center_id = ${centerProduct.center.id}," +
                             "Product_id = ${centerProduct.product.id}" +
                             "where id = $id;")
+            Tests().printlnBlue("Updated object $centerProduct")
             true
         } catch (e: Exception) {
+            Tests().printlnBlue("Error. Object $centerProduct is not updated")
             false
         }
     }
 
     fun removeCenterProductById(id: Int, centerProductId: CenterProductId): Boolean {
-        var statement: Statement? = null
+        val statement: Statement
 
         return try {
             statement = MyConnection.connection.createStatement()
             statement.execute(
                     "delete from center_product where $centerProductId = $id;")
+            Tests().printlnBlue("Error. Object with $id is deleted")
             true
         } catch (e: Exception) {
+            Tests().printlnBlue("Error. Object with id = $id is not deleted")
             false
         }
     }

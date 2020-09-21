@@ -47,13 +47,13 @@ class DAOCenter {
         val statement: Statement = MyConnection.connection.createStatement()
         resultSet = statement.executeQuery("select * from logistic_center;")
 
-        val noNullsArray = resultArray.filterNotNull()
-
         var i = 0
         while (resultSet.next()) {
             resultArray[i] = extractCenter(resultSet)
             i++
         }
+
+        val noNullsArray = resultArray.filterNotNull()
 
         Tests().printlnBlue("Accepted ${noNullsArray.size} objects of class \"LogisticCenter\"")
 
@@ -95,7 +95,7 @@ class DAOCenter {
             statement.execute(
                     "update logistic_center set\n" +
                             "Name = \"${center.name}\"," +
-                            "Location = \"${center.location}\"" +
+                            "Location = \"${center.location}\" " +
                             "where id = $id;")
             Tests().printlnBlue("Updated object $center")
             true
@@ -115,7 +115,7 @@ class DAOCenter {
             statement = MyConnection.connection.createStatement()
             statement.execute(
                     "delete from logistic_center where id = $id;")
-            Tests().printlnBlue("Error. Object with $id is deleted")
+            Tests().printlnBlue("Object with $id is deleted")
             true
         } catch (e: Exception){
             Tests().printlnBlue("Error. Object with id = $id is not deleted")

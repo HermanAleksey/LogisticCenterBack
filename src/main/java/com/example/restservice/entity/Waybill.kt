@@ -1,10 +1,10 @@
 package com.example.restservice.entity
 
 data class Waybill(
-        var id: Int,
+        var id: Int = 1,
 //        var product: Product,
-        var dateOfDelivery: String,
-        var dateOfShipment: String,
-        var driver: Driver,
-        var operator: Operator) {
+        var dateOfDelivery: String = "default",
+        var dateOfShipment: String = "default",
+        var driver: Driver = Driver(),
+        var operator: Operator = Operator()) {
 }
