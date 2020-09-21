@@ -1,7 +1,11 @@
 package com.example.restservice.DAO
 
 import com.example.restservice.MyConnection
+import com.example.restservice.Tests
+import com.example.restservice.entity.Account
 import com.example.restservice.entity.Driver
+import com.example.restservice.entity.LogisticsCenter
+import com.example.restservice.entity.Operator
 import java.lang.Exception
 import java.sql.ResultSet
 import java.sql.SQLException
@@ -16,29 +20,32 @@ class DAODriver {
     remove by id
      */
 
-    fun getDriver(id: Int): Driver? {
-        var driver: Driver? = null
-        var statement: Statement? = null
-        var resultSet: ResultSet? = null
+    fun getDriver(id: Int): Driver {
+        val driver: Driver
+        val resultSet: ResultSet
 
-        statement = MyConnection.connection.createStatement()
+        val statement: Statement = MyConnection.connection.createStatement()
         resultSet = statement.executeQuery("select * from driver where id = $id;")
-        resultSet.next()
+
+        if (!resultSet.next()){
+            Tests().printlnBlue("Error. Table driver is empty")
+            return Driver(1,"default", "default")
+        }
+
 
         driver = extractDriver(resultSet)
+
+        Tests().printlnBlue("Accepted object: $driver")
 
         return driver
     }
 
-    fun getDrivers(): Array<Driver>? {
-        var resultArray = emptyArray<Driver>()
-        var statement: Statement? = null
-        var resultSet: ResultSet? = null
+    fun getDrivers(): List<Driver> {
+        val resultArray = arrayOfNulls<Driver>(1000)
+        val resultSet: ResultSet
 
-        statement = MyConnection.connection.createStatement()
+        val statement: Statement = MyConnection.connection.createStatement()
         resultSet = statement.executeQuery("select * from driver;")
-
-        resultArray = emptyArray()
 
         var i = 0
         while (resultSet.next()) {
@@ -46,7 +53,11 @@ class DAODriver {
             i++
         }
 
-        return resultArray
+        val noNulls = resultArray.filterNotNull()
+
+        Tests().printlnBlue("Accepted ${noNulls.size} objects of class \"Driver\"")
+
+        return noNulls
     }
 
     private fun extractDriver(resultSet: ResultSet): Driver {
@@ -57,20 +68,27 @@ class DAODriver {
         return Driver(id, FIO, phoneNumber)
     }
 
-    fun insertDriver(driver: Driver) {
-        var statement: Statement? = null
+    fun insertDriver(driver: Driver): Boolean {
+        val statement: Statement
 
-        statement = MyConnection.connection.createStatement()
-        statement.execute(
-                "insert into Driver(\n" +
-                        "ID, FIO, Phone_number\n" +
-                        ") values (\n" +
-                        "${driver.id}, \"${driver.FIO}\", \"${driver.phoneNumber}\"" +
-                        ");")
+        return try {
+            statement = MyConnection.connection.createStatement()
+            statement.execute(
+                    "insert into Driver(\n" +
+                            "ID, FIO, Phone_number\n" +
+                            ") values (\n" +
+                            "${driver.id}, \"${driver.FIO}\", \"${driver.phoneNumber}\"" +
+                            ");")
+            Tests().printlnBlue("Inserted object $driver")
+            true
+        } catch (e: Exception) {
+            Tests().printlnBlue("Error. Object $driver is not inserted")
+            false
+        }
     }
 
     fun updateDriver(id: Int, driver: Driver): Boolean {
-        var statement: Statement? = null
+        val statement: Statement
 
         return try {
             statement = MyConnection.connection.createStatement()
@@ -78,22 +96,26 @@ class DAODriver {
                     "update driver set\n" +
                             "FIO = \"${driver.FIO}\", Phone_number = \"${driver.phoneNumber}\"" +
                             "where id = $id;")
+            Tests().printlnBlue("Updated object $driver")
             true
         } catch (e: Exception) {
+            Tests().printlnBlue("Error. Object $driver is not updated")
             false
         }
 
     }
 
     fun removeDriver(id: Int): Boolean {
-        var statement: Statement? = null
+        val statement: Statement
 
         return try {
             statement = MyConnection.connection.createStatement()
             statement.execute(
                     "delete from Driver where id = $id;")
+            Tests().printlnBlue("Error. Object with $id is deleted")
             true
         } catch (e: Exception) {
+            Tests().printlnBlue("Error. Object with id = $id is not deleted")
             false
         }
     }

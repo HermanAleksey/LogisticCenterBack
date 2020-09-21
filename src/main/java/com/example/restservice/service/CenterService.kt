@@ -6,22 +6,22 @@ import com.example.restservice.entity.LogisticsCenter
 class CenterService {
 
     fun getCenter(id: Int): LogisticsCenter{
-        return DAOCenter().getCenter(id)!!
+        return DAOCenter().getCenter(id)
     }
 
-    fun getAllCenters(): Array<LogisticsCenter>{
-        return DAOCenter().getCenters()!!
+    fun getAllCenters(): List<LogisticsCenter>{
+        return DAOCenter().getCenters()
     }
 
-    fun createCenter(center: LogisticsCenter): Boolean{
+    fun insertCenter(center: LogisticsCenter): Boolean{
         return DAOCenter().insertCenter(center)
     }
 
-    fun redactCenter(id: Int,center: LogisticsCenter): Boolean{
+    fun updateCenter(id: Int, center: LogisticsCenter): Boolean{
         return DAOCenter().updateCenter(id,center)
     }
 
-    fun deleteCenter(id: Int): Boolean{
+    fun removeCenter(id: Int): Boolean{
         return DAOCenter().removeCenter(id)
     }
 

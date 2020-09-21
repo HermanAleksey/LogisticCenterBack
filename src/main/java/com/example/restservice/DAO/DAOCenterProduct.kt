@@ -105,13 +105,13 @@ class DAOCenterProduct {
         }
     }
 
-    fun removeCenterProductById(id: Int): Boolean {
+    fun removeCenterProductById(id: Int, centerProductId: CenterProductId): Boolean {
         var statement: Statement? = null
 
         return try {
             statement = MyConnection.connection.createStatement()
             statement.execute(
-                    "delete from center_product where ${CenterProductId.CENTER_PRODUCT_ID} = $id;")
+                    "delete from center_product where $centerProductId = $id;")
             true
         } catch (e: Exception) {
             false

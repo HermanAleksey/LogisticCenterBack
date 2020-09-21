@@ -1,6 +1,8 @@
 package com.example.restservice.DAO
 
 import com.example.restservice.MyConnection
+import com.example.restservice.Tests
+import com.example.restservice.entity.Account
 import com.example.restservice.entity.Operator
 import java.lang.Exception
 import java.sql.ResultSet
@@ -18,48 +20,51 @@ class DAOOperator {
     -----  remove by id
      */
 
-    fun getOperator(id: Int): Operator? {
-        var operator: Operator? = null
-        var statement: Statement? = null
-        var resultSet: ResultSet? = null
+    fun getOperator(id: Int): Operator {
+        val operator: Operator
+        val resultSet: ResultSet
 
-        statement = MyConnection.connection.createStatement()
+        val statement: Statement = MyConnection.connection.createStatement()
         resultSet = statement.executeQuery("select * from operator where id = $id;")
-        resultSet.next()
+
+        if (!resultSet.next()){
+            Tests().printlnBlue("Error. Table operator is empty")
+            return Operator(1,"default", "default", Account(1))
+        }
 
         operator = extractOperator(resultSet)
+
+        Tests().printlnBlue("Accepted object: $operator")
 
         return operator
     }
 
-    fun getOperators(FIO: String): Array<Operator>? {
-        var resultArray = emptyArray<Operator>()
-        var statement: Statement? = null
-        var resultSet: ResultSet? = null
+    fun getOperators(FIO: String): List<Operator> {
+        val resultArray = arrayOfNulls<Operator>(1000)
+        val resultSet: ResultSet
 
-        statement = MyConnection.connection.createStatement()
+        val statement: Statement = MyConnection.connection.createStatement()
         resultSet = statement.executeQuery("select * from operator where FIO like \"%$FIO%\";")
 
-        resultArray = emptyArray()
-
         var i = 0
         while (resultSet.next()) {
             resultArray[i] = extractOperator(resultSet)
             i++
         }
 
-        return resultArray
+        val notNullsArray = resultArray.filterNotNull()
+
+        Tests().printlnBlue("Accepted ${notNullsArray.size} objects of class \"Operator\"")
+
+        return notNullsArray
     }
 
-    fun getOperators(): Array<Operator>? {
-        var resultArray = emptyArray<Operator>()
-        var statement: Statement? = null
-        var resultSet: ResultSet? = null
+    fun getOperators(): List<Operator> {
+        val resultArray = arrayOfNulls<Operator>(1000)
+        val resultSet: ResultSet
 
-        statement = MyConnection.connection.createStatement()
+        val statement: Statement = MyConnection.connection.createStatement()
         resultSet = statement.executeQuery("select * from operator;")
-
-        resultArray = emptyArray()
 
         var i = 0
         while (resultSet.next()) {
@@ -67,7 +72,11 @@ class DAOOperator {
             i++
         }
 
-        return resultArray
+        val notNullsArray = resultArray.filterNotNull()
+
+        Tests().printlnBlue("Accepted ${notNullsArray.size} objects of class \"Operator\"")
+
+        return notNullsArray
     }
 
     private fun extractOperator(resultSet: ResultSet): Operator {
@@ -78,11 +87,11 @@ class DAOOperator {
         val accountId = resultSet.getInt(4)
         val account = DAOAccount().getAccount(accountId)
 
-        return Operator(id, FIO, phoneNumber, account!!)
+        return Operator(id, FIO, phoneNumber, account)
     }
 
     fun insertOperator(operator: Operator): Boolean {
-        var statement: Statement? = null
+        val statement: Statement
 
         return try {
             statement = MyConnection.connection.createStatement()
@@ -93,14 +102,16 @@ class DAOOperator {
                             "${operator.id}, \"${operator.FIO}\"," +
                             "\"${operator.phoneNumber}\", ${operator.account.id}\n" +
                             ");")
+            Tests().printlnBlue("Inserted object $operator")
             true
         } catch (e: Exception) {
+            Tests().printlnBlue("Error. Object $operator is not inserted")
             false
         }
     }
 
     fun updateOperator(id: Int, operator: Operator): Boolean {
-        var statement: Statement? = null
+        val statement: Statement
 
         return try {
             statement = MyConnection.connection.createStatement()
@@ -108,8 +119,10 @@ class DAOOperator {
                     "update operator set\n" +
                             "FIO = \"${operator.FIO}\", Phone_number = \"${operator.phoneNumber}\"" +
                             "where id = $id;")
+            Tests().printlnBlue("Updated object $operator")
             true
         } catch (e: Exception) {
+            Tests().printlnBlue("Error. Object $operator is not updated")
             false
         }
     }

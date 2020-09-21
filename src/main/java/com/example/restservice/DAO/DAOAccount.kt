@@ -1,12 +1,12 @@
 package com.example.restservice.DAO
 
 import com.example.restservice.MyConnection.connection
+import com.example.restservice.Tests
 import com.example.restservice.entity.Account
+import com.example.restservice.entity.Operator
 import com.example.restservice.entity.Roles
-import com.sun.org.apache.xpath.internal.operations.Bool
 import java.lang.Exception
 import java.sql.ResultSet
-import java.sql.SQLException
 import java.sql.Statement
 
 class DAOAccount {
@@ -19,37 +19,43 @@ class DAOAccount {
     ----- remove by id
      */
 
-    fun getAccount(id: Int): Account? {
-        var account: Account? = null
-        var statement: Statement? = null
-        var resultSet: ResultSet? = null
+    fun getAccount(id: Int): Account {
+        val account: Account
+        val resultSet: ResultSet
 
-        statement = connection.createStatement()
+        val statement: Statement = connection.createStatement()
         resultSet = statement.executeQuery("select * from account where id = $id;")
-        resultSet.next()
+
+        if (!resultSet.next()){
+            Tests().printlnBlue("Error. Table account is empty")
+            return Account(1,"default", "default")
+        }
 
         account = extractAccount(resultSet)
+
+        Tests().printlnBlue("Accepted object: $account")
 
         return account
     }
 
-    fun getAccounts(): Array<Account>? {
-        var resultArray = emptyArray<Account>()
-        var statement: Statement? = null
-        var resultSet: ResultSet? = null
+    fun getAccounts(): List<Account> {
+        val array = arrayOfNulls<Account>(1000)
+        val resultSet: ResultSet
 
-        statement = connection.createStatement()
+        val statement: Statement = connection.createStatement()
         resultSet = statement.executeQuery("select * from account;")
-
-        resultArray = emptyArray()
 
         var i = 0
         while (resultSet.next()) {
-            resultArray[i] = extractAccount(resultSet)
+            array[i] = extractAccount(resultSet)
             i++
         }
 
-        return resultArray
+        val noNullsArray = array.filterNotNull()
+
+        Tests().printlnBlue("Accepted ${noNullsArray.size} objects of class \"Account\"")
+
+        return noNullsArray
     }
 
     private fun extractAccount(resultSet: ResultSet): Account {
@@ -68,7 +74,7 @@ class DAOAccount {
     }
 
     fun insertAccount(account: Account): Boolean {
-        var statement: Statement? = null
+        val statement: Statement
 
         return try {
             statement = connection.createStatement()
@@ -76,26 +82,31 @@ class DAOAccount {
                     "insert into Account(\n" +
                             "login, pass, role_id\n" +
                             ") values (\n" +
-                            "${account.login}, ${account.password}, ${Roles.Driver.getPosition(account.role)}\n" +
+                            "\"${account.login}\", \"${account.password}\", ${Roles.Driver.getPosition(account.role)}\n" +
                             ");")
+
+            Tests().printlnBlue("Inserted object $account")
             true
         } catch (e: Exception){
+            Tests().printlnBlue("Error. Object $account is not inserted")
             false
         }
 
     }
 
     fun updateAccount(id: Int, account: Account) : Boolean {
-        var statement: Statement? = null
+        val statement: Statement
 
         return try {
             statement = connection.createStatement()
             statement.execute(
                     "update account set\n" +
-                            "login = ${account.login}, pass = ${account.password}\n" +
+                            "login = \"${account.login}\", pass = \"${account.password}\"" +
                             "where id = $id;")
+            Tests().printlnBlue("Updated object $account")
             true
         } catch (e: Exception){
+            Tests().printlnBlue("Error. Object $account is not updated")
             false
         }
     }

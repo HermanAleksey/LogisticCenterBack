@@ -24,8 +24,8 @@ class CenterProductService {
     }
 
     //second param describe by witch id select objects
-    fun deleteCenterProductById(id: Int): Boolean{
-        return DAOCenterProduct().removeCenterProductById(id)
+    fun deleteCenterProductById(id: Int, centerProductId: CenterProductId): Boolean{
+        return DAOCenterProduct().removeCenterProductById(id, centerProductId)
     }
 
 }
