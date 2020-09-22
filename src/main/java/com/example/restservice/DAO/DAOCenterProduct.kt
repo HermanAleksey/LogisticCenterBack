@@ -119,10 +119,10 @@ class DAOCenterProduct {
             statement = MyConnection.connection.createStatement()
             statement.execute(
                     "delete from center_product where $centerProductId = $id;")
-            Tests().printlnBlue("Error. Object with $id is deleted")
+            Tests().printlnBlue("Object CenterProduct with $id is deleted")
             true
         } catch (e: Exception) {
-            Tests().printlnBlue("Error. Object with id = $id is not deleted")
+            Tests().printlnBlue("Error. Object CenterProduct with id = $id is not deleted")
             false
         }
     }

@@ -115,10 +115,10 @@ class DAOCenter {
             statement = MyConnection.connection.createStatement()
             statement.execute(
                     "delete from logistic_center where id = $id;")
-            Tests().printlnBlue("Object with $id is deleted")
+            Tests().printlnBlue("Object Center with id = $id is deleted")
             true
         } catch (e: Exception){
-            Tests().printlnBlue("Error. Object with id = $id is not deleted")
+            Tests().printlnBlue("Error. Object Center with id = $id is not deleted")
             false
         }
 
