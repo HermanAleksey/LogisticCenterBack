@@ -28,7 +28,7 @@ class DriverService {
     // can delete Driver only if he not used in waybills
     fun removeDriver(id: Int): Boolean{
         val waybillsArray = DAOWaybill().getWaybills()
-        waybillsArray!!.forEach {
+        waybillsArray.forEach {
             if (it.driver.id == id){
                 return false
             }

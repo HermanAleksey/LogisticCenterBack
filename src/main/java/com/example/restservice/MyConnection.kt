@@ -12,21 +12,21 @@ object MyConnection {
             user, password)
 
     fun closeSetResult(resultSet: ResultSet) {
-        if (!!resultSet.isClosed) try {
+        if (!resultSet.isClosed) try {
             resultSet.close()
         } catch (ignore: SQLException) {
         }
     }
 
     fun closeStatement(statement: Statement) {
-        if (!!statement.isClosed) try {
+        if (!statement.isClosed) try {
             statement.close()
         } catch (ignore: SQLException) {
         }
     }
 
     fun closeConnection(connection: Connection) {
-        if (!!connection.isClosed) try {
+        if (!connection.isClosed) try {
             connection.close()
         } catch (ignore: SQLException) {
         }

@@ -14,5 +14,16 @@ public class RestServiceApplication {
 
         SpringApplication.run(RestServiceApplication.class, args);
 
+
+//        int i = 0;
+//        while (true){
+//            System.out.println("time = "+i);
+//            i++;
+//            try {
+//                Thread.sleep(100);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 }

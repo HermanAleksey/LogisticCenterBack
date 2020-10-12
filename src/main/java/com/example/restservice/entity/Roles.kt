@@ -8,7 +8,6 @@ enum class Roles {
             Driver -> 1
             Operator -> 2
             Administrator -> 3
-            else ->1
         }
     }
 }

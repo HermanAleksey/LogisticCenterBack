@@ -25,7 +25,7 @@ class WaybillService {
 
     fun removeWaybill(id: Int): Boolean {
         val productsArray = DAOProduct().getProducts()
-        productsArray!!.forEach {
+        productsArray.forEach {
             if (it.waybill.id == id) {
                 return false
             }

@@ -8,7 +8,7 @@ class Tests {
     val ANSI_BLUE = "\u001B[34m"
     val ANSI_RESET = "\u001B[0m"
 
-    fun printlnBlue(str: String){
+    fun printlnBlue(str: String) {
         println("$ANSI_BLUE$str$ANSI_RESET")
     }
 
@@ -38,10 +38,10 @@ class Tests {
             it.getProducts()
             //correct
 
-            it.insertProduct(Product(1,"Inserted","line", 3, Waybill(3)))
+            it.insertProduct(Product(1, "Inserted", "line", 3, Waybill(3)))
             //correct
 
-            it.updateProduct(1, Product(1,"Updated","Field", 3, Waybill(3)))
+            it.updateProduct(1, Product(1, "Updated", "Field", 3, Waybill(3)))
             //correct
 
             it.removeProduct(10)
@@ -56,10 +56,10 @@ class Tests {
         WaybillService().getAllWaybills()
         //correct
 
-        WaybillService().insertWaybill(Waybill(1,"New DATE Deliv","Date shipment", Driver(1),Operator(1)))
+        WaybillService().insertWaybill(Waybill(1, "New DATE Deliv", "Date shipment", Driver(1), Operator(1)))
         //correct
 
-        WaybillService().updateWaybill(1, Waybill(1,"update","line", Driver(1),Operator(1)))
+        WaybillService().updateWaybill(1, Waybill(1, "update", "line", Driver(1), Operator(1)))
         //correct
 
         WaybillService().removeWaybill(1)
@@ -76,10 +76,10 @@ class Tests {
         OperatorService().getAllOperators()
         //correct
 
-        OperatorService().insertOperator(Operator(1,"New FIO","2812482", Account(1)))
+        OperatorService().insertOperator(Operator(1, "New FIO", "2812482", Account(1)))
         //correct
 
-        OperatorService().updateOperator(1, Operator(1, "Updated FIO","new number", Account(1)))
+        OperatorService().updateOperator(1, Operator(1, "Updated FIO", "new number", Account(1)))
         //correct
     }
 
@@ -90,25 +90,25 @@ class Tests {
         DriverService().getAllDrivers()
         //correct
 
-        DriverService().insertDriver(Driver(1,"New FIO","2812482"))
+        DriverService().insertDriver(Driver(1, "New FIO", "2812482"))
         //correct
 
-        DriverService().updateDriver(1,Driver(1, "updated","driver"))
+        DriverService().updateDriver(1, Driver(1, "updated", "driver"))
         //correct
 
         DriverService().removeDriver(1)
         //correct
     }
 
-    fun testAccountFunctions(){
+    fun testAccountFunctions() {
         val account1: Account = AccountService().getAccount(1)
         println(account1.toString())
         //correct
 
         val accounts = AccountService().getAllAccounts()
-//        accounts.forEach {
-//            println(it)
-//        }
+        accounts.forEach {
+            println(it)
+        }
         //correct
 
         val account2 = Account(1, "CreatedAccount", "CreatedTest", Roles.Operator)
@@ -120,7 +120,7 @@ class Tests {
         //correct
     }
 
-    fun testCenterFunctions(){
+    fun testCenterFunctions() {
         val center1 = CenterService().getCenter(1)
         println(center1)
         //correct
