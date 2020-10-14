@@ -35,7 +35,7 @@ class OperatorController {
         return OperatorService().getOperator(id)
     }
 
-    @GetMapping("/operator/fio")
+    @GetMapping("/operators/fio")
     fun getOperator(
             @RequestParam(value = "fio", defaultValue = "default") FIO: String
     ): List<Operator> {
